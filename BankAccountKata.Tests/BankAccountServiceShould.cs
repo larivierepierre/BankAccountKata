@@ -112,5 +112,62 @@ namespace TestBankAccount
             //act 
             bankAccountService.Withdrawal(account, amount, clock);
         }
+
+        [TestMethod]
+        public void DisplayEmptyAccountStatement()
+        {
+            //arrange
+            var operationRepository = new TestOperationRepository();
+            var bankAccountService = new BankAccountService(operationRepository);
+
+            Account account = new("IBAN1");
+
+            string expectedConsoleOutput = "";
+
+            //act
+            var original = Console.Out;
+            var sw = new StringWriter();
+            Console.SetOut(sw);
+
+            bankAccountService.DisplayAccountStatement(account);
+
+            string result = sw.ToString();
+
+            //assert
+            Assert.AreEqual(expectedConsoleOutput, result);
+            Console.SetOut(original);
+        }
+
+        [TestMethod]
+        public void DisplayAccountStatement()
+        {
+
+            //arrange
+            var operationRepository = new TestOperationRepository();
+            var bankAccountService = new BankAccountService(operationRepository);
+
+            const decimal amount1 = 1900;
+            const decimal amount2 = 1000;
+
+            Account account = new("IBAN1");
+
+            string expectedConsoleOutput = "Amount: 1900 Account: IBAN1 Balance: 1900 Date: 01/01/2023 00:00:00 OperationType: Deposit\r\nAmount: 1000 Account: IBAN1 Balance: 900 Date: 01/01/2023 00:00:00 OperationType: Withdrawal\r\n";
+
+            //act
+            var original = Console.Out;
+            var sw = new StringWriter();
+            Console.SetOut(sw);
+
+            bankAccountService.Deposit(account, amount1, clock);
+            bankAccountService.Withdrawal(account, amount2, clock);
+
+            bankAccountService.DisplayAccountStatement(account);
+
+            string result = sw.ToString();
+
+            //assert
+            Assert.AreEqual(expectedConsoleOutput, result);
+            Console.SetOut(original);
+        }
     }
 }

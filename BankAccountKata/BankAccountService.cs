@@ -52,5 +52,18 @@ namespace BankAccountKata
 
             _operationRepository.AddOperation(operation);
         }
+
+        public void DisplayAccountStatement(Account account)
+        {
+            var operations = _operationRepository.GetAllByAccount(account);
+
+            var lines = operations.Select(operation => "Amount: " + operation.Amount + " Account: " + operation.Account.IBAN + " Balance: " + operation.Balance + " Date: " + operation.Date + " OperationType: " + operation.TypeOperation)
+                                  .ToList();
+
+            foreach (string line in lines)
+            {
+                Console.WriteLine(line);
+            }
+        }
     }
 }

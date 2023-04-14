@@ -13,5 +13,10 @@
         {
             return _operations.LastOrDefault(o => o.Account == account);
         }
+
+        public List<Operation> GetAllByAccount(Account account)
+        {
+            return _operations.FindAll(o => o.Account == account);
+        }
     }
 }

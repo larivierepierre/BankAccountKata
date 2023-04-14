@@ -47,6 +47,7 @@ namespace TestBankAccount
             //arrange
             var operationRepository = new TestOperationRepository();
             var bankAccountService = new BankAccountService(operationRepository);
+
             Account account = new("IBAN1");
             decimal amount = -2000;
 
@@ -89,6 +90,7 @@ namespace TestBankAccount
             //arrange
             var operationRepository = new TestOperationRepository();
             var bankAccountService = new BankAccountService(operationRepository);
+
             Account account = new("IBAN1");
             decimal amount = -2000;
 
@@ -96,5 +98,19 @@ namespace TestBankAccount
             bankAccountService.Withdrawal(account, amount, clock);
         }
 
+        [TestMethod]
+        [ExpectedException(typeof(AmountTooHighException), "the requested amount is too high")]
+        public void ThrowExceptionIfWithdrawalAmountIsGreaterThanTheBalance()
+        {
+            //arrange
+            var operationRepository = new TestOperationRepository();
+            var bankAccountService = new BankAccountService(operationRepository);
+
+            Account account = new("IBAN1");
+            decimal amount = 1000;
+
+            //act 
+            bankAccountService.Withdrawal(account, amount, clock);
+        }
     }
 }

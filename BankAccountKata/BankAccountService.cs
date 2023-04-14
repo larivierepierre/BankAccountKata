@@ -39,6 +39,11 @@ namespace BankAccountKata
 
             var balance = _operationRepository.GetLastOperation(account)?.Balance ?? 0;
 
+            if (balance < amount)
+            {
+                throw new AmountTooHighException("the requested amount is too high");
+            }
+
             var now = Clock.Now;
 
             var newBalance = balance - amount;

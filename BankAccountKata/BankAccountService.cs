@@ -32,6 +32,11 @@ namespace BankAccountKata
 
         public void Withdrawal(Account account, decimal amount, IClock Clock)
         {
+            if (amount < 0)
+            {
+                throw new InvalidAmountException("the amount must be positive");
+            }
+
             var balance = _operationRepository.GetLastOperation(account)?.Balance ?? 0;
 
             var now = Clock.Now;

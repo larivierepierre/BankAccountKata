@@ -29,5 +29,18 @@ namespace BankAccountKata
 
             _operationRepository.AddOperation(operation);
         }
+
+        public void Withdrawal(Account account, decimal amount, IClock Clock)
+        {
+            var balance = _operationRepository.GetLastOperation(account)?.Balance ?? 0;
+
+            var now = Clock.Now;
+
+            var newBalance = balance - amount;
+
+            var operation = new Operation(amount, account, newBalance, now, OperationType.Withdrawal);
+
+            _operationRepository.AddOperation(operation);
+        }
     }
 }

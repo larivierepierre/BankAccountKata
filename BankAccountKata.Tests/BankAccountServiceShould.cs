@@ -53,5 +53,33 @@ namespace TestBankAccount
             //act
             bankAccountService.Deposit(account, amount, clock);
         }
+
+        [TestMethod]
+        public void AllowValidWithdrawal()
+        {
+            //arrange
+            var operationRepository = new TestOperationRepository();
+            var bankAccountService = new BankAccountService(operationRepository);
+
+            const decimal amount1 = 1900;
+            const decimal amount2 = 1000;
+
+            Account account = new("IBAN1");
+
+            var expected = new List<Operation>
+            {
+                new Operation (amount1,account,1900,when,OperationType.Deposit),
+                new Operation (amount2,account,900,when,OperationType.Withdrawal)
+            };
+
+            //act
+            bankAccountService.Deposit(account, amount1, clock);
+            bankAccountService.Withdrawal(account, amount2, clock);
+
+            var actual = operationRepository.GetAllOperations();
+
+            //assert
+            CollectionAssert.AreEqual(expected, actual);
+        }
     }
 }

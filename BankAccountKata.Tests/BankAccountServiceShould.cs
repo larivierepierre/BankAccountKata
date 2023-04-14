@@ -1,4 +1,5 @@
 using BankAccountKata;
+using BankAccountKata.Exceptions;
 using BankAccountKata.Interfaces;
 
 namespace TestBankAccount
@@ -23,7 +24,6 @@ namespace TestBankAccount
             var operationRepository = new TestOperationRepository();
             var bankAccountService = new BankAccountService(operationRepository);
 
-
             Account account = new("IBAN1");
             const decimal amount = 1000;
 
@@ -38,6 +38,20 @@ namespace TestBankAccount
 
             //assert
             CollectionAssert.AreEqual(expected, actual);
+        }
+    
+        [TestMethod]
+        [ExpectedException(typeof(InvalidAmountException), "the amount must be positive")]
+        public void ThrowExceptionIfDepositAmountIsNegative()
+        {
+            //arrange
+            var operationRepository = new TestOperationRepository();
+            var bankAccountService = new BankAccountService(operationRepository);
+            Account account = new("IBAN1");
+            decimal amount = -2000;
+
+            //act
+            bankAccountService.Deposit(account, amount, clock);
         }
     }
 }

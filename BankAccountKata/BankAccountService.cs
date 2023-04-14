@@ -1,5 +1,5 @@
-﻿using BankAccountKata.Interfaces;
-
+﻿using BankAccountKata.Exceptions;
+using BankAccountKata.Interfaces;
 
 namespace BankAccountKata
 {
@@ -13,7 +13,12 @@ namespace BankAccountKata
         }
 
         public void Deposit(Account account, decimal amount, IClock Clock)
-        { 
+        {
+            if (amount < 0)
+            {
+                throw new InvalidAmountException("the amount must be positive");
+            }
+
             var now = Clock.Now;
 
             var balance = _operationRepository.GetLastOperation(account)?.Balance ?? 0;
